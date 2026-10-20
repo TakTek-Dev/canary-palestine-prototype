@@ -12,7 +12,7 @@ import json
 import os
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-V = '10'                                      # bump on any asset change (Chrome caches hard)
+V = '11'                                      # bump on any asset change (Chrome caches hard)
 E = json.load(open(os.path.join(ROOT, 'tools', 'edition.json'), encoding='utf-8'))
 MARKS = json.load(open(os.path.join(ROOT, 'tools', 'out', 'marks.json'), encoding='utf-8'))   # written by brand.py
 PH = json.load(open(os.path.join(ROOT, 'tools', 'photos.json'), encoding='utf-8')) if os.path.exists(
