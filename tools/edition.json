@@ -1,0 +1,819 @@
+{
+ "date": "2026-10-20",
+ "weekday": "Tuesday",
+ "sweep": "07:00",
+ "window": [
+  "2026-09-21",
+  "2026-10-20"
+ ],
+ "description": "Canary Palestine listens to water, air, power and health in Gaza and the West Bank, station by station, and says early when something goes quiet.",
+ "about": "Canary Palestine is an early-warning newsroom for water, air, power and health in Gaza and the West Bank. It listens to named reports, station by station, and says so when a station goes quiet.",
+ "lead": {
+  "codes": [
+   "W1",
+   "P1"
+  ],
+  "status": "alert",
+  "when": "OCHA report, 19 Oct",
+  "photo": "kh-pumps",
+  "id": "gaza-water-production",
+  "headline": "Gaza is making a third less drinking water than in mid-September",
+  "dek": "Repairs cut the line to northern Gaza for most of eight days, the Bani Suheila line was down for two, and the southern desalination plant lost power. Eleven water partners may stop work.",
+  "reading_note": "drinking water produced 6–12 Oct, against the weekly volume in mid-September",
+  "src": "OCHA humanitarian situation report of 15 Oct (published 19 Oct), WASH Cluster data"
+ },
+ "newest": [
+  {
+   "date": "2026-10-20",
+   "code": "P4",
+   "text": "Beita family without power for a third day",
+   "photo": "beita"
+  },
+  {
+   "date": "2026-10-19",
+   "code": "A4",
+   "text": "Third climate plan sets out 175 costed measures",
+   "photo": "jordan-valley"
+  },
+  {
+   "date": "2026-10-19",
+   "code": "W4",
+   "text": "950,000 people in flood-risk sites before the rains",
+   "photo": "wadi-gaza"
+  },
+  {
+   "date": "2026-10-18",
+   "code": "W8",
+   "text": "Beit Ula loses about 60% of its water",
+   "photo": "salfit-wwtp"
+  },
+  {
+   "date": "2026-10-15",
+   "code": "H5",
+   "text": "Medical teams stopped on the way to al-Majaz",
+   "photo": "majaz"
+  }
+ ],
+ "silence": {
+  "title": "Silence is the signal.",
+  "say": "A canary that stops singing is the warning. When a station has had no public report for weeks, the desk does not fill the gap; it counts the days and asks why."
+ },
+ "feature": {
+  "s": "alert",
+  "codes": "P4 · al-Masoudiya",
+  "kicker": "Power · Nablus · 12 Oct",
+  "photo": "masudiya",
+  "headline": "Five times in two months, settlers have cut al-Masoudiya's power",
+  "body": [
+   "Settlers cut off electricity to the al-Masoudiya area, which belongs to Burqa north-west of Nablus, on Monday 12 October. Local official Dhiyab Hajji told WAFA it was the fifth such cut in a little more than two months, and that attacks rose after an outpost was set up near the area (WAFA, 12 Oct).",
+   "In its 25 September report, OCHA recorded that about 65 Palestinians in Al Mas'uddiya remained without electricity for more than 24 hours after settlers reportedly vandalised the community's main electricity cable (OCHA, 25 Sep).",
+   "The same week, WAFA reported power cuts by settlers to about 20 homes in Wadi al-A'war east of Hebron (12 Oct) and to single homes in Burin (15 Oct) and Beita (18-20 Oct), all south of Nablus."
+  ]
+ },
+ "cards": [
+  {
+   "id": "meds",
+   "s": "alert",
+   "codes": "H2",
+   "kicker": "Health · Gaza",
+   "photo": "shifa",
+   "url": "https://english.wafa.ps/Pages/Details/175647",
+   "headline": "Gaza hospitals have none of 44% of their essential medicines",
+   "summary": "Medical sources in Gaza say 44 per cent of essential medicines are at zero stock and 54 per cent of medical consumables are unavailable, including insulin pens, chemotherapy drugs and kidney-transplant immunosuppressants.",
+   "src": "Medical sources in Gaza via WAFA · 8 Oct"
+  },
+  {
+   "id": "flood",
+   "s": "alert",
+   "codes": "W4",
+   "kicker": "Water · Gaza",
+   "photo": "mawasi",
+   "url": "https://www.ochaopt.org/content/humanitarian-situation-report-15-october-2026",
+   "headline": "Before the rains, 950,000 displaced people live where floods reach",
+   "summary": "OCHA says some 950,000 displaced people live in sites at medium to high flood risk, over 400,000 at high risk. Available supplies could partially help only 18 per cent of the 294,250 families needing winter shelter assistance.",
+   "src": "OCHA oPt via OCHA · 19 Oct"
+  },
+  {
+   "id": "himma",
+   "s": "alert",
+   "codes": "W6",
+   "kicker": "Water · Jordan Valley",
+   "photo": "maleh",
+   "url": "https://www.wafa.ps/Pages/Details/155430",
+   "headline": "Settlers pour concrete at al-Himma spring",
+   "summary": "Settlers continued bulldozing and enlarging al-Himma spring in the northern Jordan Valley on 7 October, rights activist Aref Daraghmeh told WAFA, bringing a concrete mixer and pouring concrete as part of works to take control of the spring and deny Palestinians its use.",
+   "src": "Aref Daraghmeh, rights activist via WAFA · 7 Oct"
+  },
+  {
+   "id": "attacks",
+   "s": "watch",
+   "codes": "H6",
+   "kicker": "Health · West Bank",
+   "photo": "salfit-hospital",
+   "url": "https://www.emro.who.int/images/stories/palestine/Attacks_on_health_care_in_the_West_Bank_Jan-Sep_26.pdf",
+   "headline": "146 attacks on West Bank health care this year",
+   "points": [
+    [
+     "146",
+     "attacks recorded by WHO, 1 Jan–30 Sep"
+    ],
+    [
+     "113",
+     "health transports affected"
+    ],
+    [
+     "25",
+     "health facilities affected"
+    ],
+    [
+     "131",
+     "cases of care being obstructed"
+    ]
+   ],
+   "src": "WHO via WHO EMRO / ReliefWeb · 16 Oct"
+  }
+ ],
+ "more": [
+  {
+   "s": "watch",
+   "codes": "W6",
+   "date": "2026-10-07",
+   "photo": "tammun",
+   "url": "https://www.wafa.ps/Pages/Details/155485",
+   "headline": "Tammun network loses about 45% of its water; €6m sewage study funded",
+   "src": "Palestinian Water Authority via WAFA"
+  },
+  {
+   "s": "watch",
+   "codes": "W8",
+   "date": "2026-10-13",
+   "photo": "salfit-wwtp",
+   "url": "https://www.wafa.ps/Pages/Details/155864",
+   "headline": "Water Authority pushes to start stalled Kharas wastewater plant",
+   "src": "Palestinian Water Authority via WAFA"
+  },
+  {
+   "s": "watch",
+   "codes": "W",
+   "date": "2026-10-14",
+   "photo": "beit-iksa",
+   "url": "https://www.wafa.ps/Pages/Details/155968",
+   "headline": "Beit Iksa has no sewage treatment plant; Water Authority weighs options",
+   "src": "Palestinian Water Authority via WAFA"
+  },
+  {
+   "s": "alert",
+   "codes": "W8",
+   "date": "2026-10-05",
+   "photo": "athaba",
+   "url": "https://english.wafa.ps/Pages/Details/175504",
+   "headline": "Israeli forces demolish water well and home at al-Deirat, east of Yatta",
+   "src": "Local sources via WAFA"
+  },
+  {
+   "s": "steady",
+   "codes": "W9",
+   "date": "2026-10-19",
+   "photo": "asira",
+   "url": "https://www.ochaopt.org/content/humanitarian-situation-report-15-october-2026",
+   "headline": "WASH partners lay or repair 32 km of water networks in West Bank",
+   "src": "OCHA oPt via OCHA"
+  },
+  {
+   "s": "watch",
+   "codes": "H5",
+   "date": "2026-09-28",
+   "photo": "pmrs",
+   "url": "https://www.ochaopt.org/content/humanitarian-situation-report-25-september-2026",
+   "headline": "17 of 244 Area C locations without mobile-clinic service",
+   "src": "Health Cluster via OCHA"
+  }
+ ],
+ "lines": [
+  {
+   "key": "water",
+   "name": "Water",
+   "code": "W",
+   "stations": [
+    {
+     "code": "W1",
+     "short": "Gaza output",
+     "place": "Gaza Strip",
+     "subject": "Drinking-water production",
+     "area": "gaza",
+     "status": "alert",
+     "reading": "−34%",
+     "word": false,
+     "what": "drinking water produced 6–12 Oct against mid-September: two-thirds of the volume.",
+     "source": "OCHA oPt via OCHA",
+     "date": "2026-10-19",
+     "url": "https://www.ochaopt.org/content/humanitarian-situation-report-15-october-2026",
+     "history": [
+      [
+       "2026-10-19",
+       "alert"
+      ]
+     ],
+     "item": "gaza-water-production",
+     "photo": "kh-pumps"
+    },
+    {
+     "code": "W2",
+     "short": "South desal",
+     "place": "Deir al-Balah, Khan Younis",
+     "subject": "Seawater desalination plants",
+     "area": "gaza",
+     "status": "alert",
+     "reading": "74%",
+     "word": false,
+     "what": "of Gaza's people rely on trucked drinking water; the two southern plants are at their lowest output.",
+     "source": "OCHA oPt via OCHA",
+     "date": "2026-10-05",
+     "url": "https://www.ochaopt.org/content/humanitarian-situation-report-2-october-2026",
+     "history": [
+      [
+       "2026-10-05",
+       "alert"
+      ]
+     ],
+     "item": "gaza-desal-south"
+    },
+    {
+     "code": "W3",
+     "short": "Gaza chlorine",
+     "place": "Gaza Strip",
+     "subject": "Water samples, chlorine",
+     "area": "gaza",
+     "status": "silent",
+     "reading": ">73%",
+     "word": false,
+     "what": "of August's 938 samples were below the WHO chlorine level. No September figures since.",
+     "source": "Health partners via OCHA",
+     "date": "2026-09-28",
+     "url": "https://www.ochaopt.org/content/humanitarian-situation-report-25-september-2026",
+     "history": [
+      [
+       "2026-09-28",
+       "alert"
+      ]
+     ],
+     "item": "gaza-water-quality",
+     "photo": "wadi-gaza-2",
+     "silent_since": "2026-09-28"
+    },
+    {
+     "code": "W4",
+     "short": "Flood-risk sites",
+     "place": "Gaza displacement sites",
+     "subject": "Flood risk before the rains",
+     "area": "gaza",
+     "status": "alert",
+     "reading": "950k",
+     "word": false,
+     "what": "people live in sites at medium to high risk of flooding; over 400,000 at high risk.",
+     "source": "OCHA oPt via OCHA",
+     "date": "2026-10-19",
+     "url": "https://www.ochaopt.org/content/humanitarian-situation-report-15-october-2026",
+     "history": [
+      [
+       "2026-10-19",
+       "alert"
+      ]
+     ],
+     "item": "gaza-flood-sites",
+     "photo": "wadi-gaza"
+    },
+    {
+     "code": "W5",
+     "short": "Gaza wastewater",
+     "place": "Gaza City, north Gaza",
+     "subject": "Wastewater and stormwater",
+     "area": "gaza",
+     "status": "steady",
+     "reading": "115k",
+     "word": false,
+     "what": "people served by wastewater lines repaired in September; the Sheikh Radwan pump station was at 30% in mid-September.",
+     "source": "OCHA oPt via OCHA",
+     "date": "2026-10-19",
+     "url": "https://www.ochaopt.org/content/humanitarian-situation-report-15-october-2026",
+     "history": [
+      [
+       "2026-09-16",
+       "watch"
+      ],
+      [
+       "2026-10-19",
+       "steady"
+      ]
+     ],
+     "item": "gaza-north-wastewater"
+    },
+    {
+     "code": "W6",
+     "short": "Tubas lines",
+     "place": "Tubas & Jordan Valley",
+     "subject": "Water lines and springs",
+     "area": "wb-north",
+     "status": "alert",
+     "reading": "3 attacks",
+     "word": true,
+     "what": "on water in 16 days: Atouf pipeline destroyed (29 Sep), concrete poured at al-Himma spring (7 Oct), meters stolen at Khirbet Yarza (14 Oct).",
+     "source": "Mukhlis Masa'id, Yarza village council via WAFA",
+     "date": "2026-10-14",
+     "url": "https://english.wafa.ps/Pages/Details/175889",
+     "history": [
+      [
+       "2026-09-30",
+       "alert"
+      ],
+      [
+       "2026-10-07",
+       "alert"
+      ],
+      [
+       "2026-10-07",
+       "watch"
+      ],
+      [
+       "2026-10-14",
+       "alert"
+      ]
+     ],
+     "item": "yarza-irrigation",
+     "photo": "maleh"
+    },
+    {
+     "code": "W7",
+     "short": "Nablus networks",
+     "place": "Nablus & Salfit villages",
+     "subject": "Village water networks",
+     "area": "wb-north",
+     "status": "watch",
+     "reading": "~50%",
+     "word": false,
+     "what": "of the water put into al-Lubban ash-Sharqiya's network is lost before it reaches homes.",
+     "source": "Palestinian Water Authority via WAFA",
+     "date": "2026-10-05",
+     "url": "https://www.wafa.ps/Pages/Details/155327",
+     "history": [
+      [
+       "2026-09-28",
+       "steady"
+      ],
+      [
+       "2026-10-05",
+       "watch"
+      ]
+     ],
+     "item": "lubban-loss",
+     "photo": "kifl-haris"
+    },
+    {
+     "code": "W8",
+     "short": "Hebron networks",
+     "place": "Hebron governorate",
+     "subject": "Town networks and wastewater",
+     "area": "wb-centre-south",
+     "status": "watch",
+     "reading": "~60%",
+     "word": false,
+     "what": "of Beit Ula's water is lost in its network; the Kharas wastewater plant is still not running.",
+     "source": "Palestinian Water Authority via WAFA",
+     "date": "2026-10-18",
+     "url": "https://www.wafa.ps/Pages/Details/156204",
+     "history": [
+      [
+       "2026-10-05",
+       "alert"
+      ],
+      [
+       "2026-10-13",
+       "watch"
+      ],
+      [
+       "2026-10-18",
+       "watch"
+      ]
+     ],
+     "item": "beit-ula-loss",
+     "photo": "salfit-wwtp"
+    },
+    {
+     "code": "W9",
+     "short": "WB incidents",
+     "place": "West Bank",
+     "subject": "Water and sanitation incidents",
+     "area": "wb",
+     "status": "watch",
+     "reading": "24",
+     "word": false,
+     "what": "incidents hit water and sanitation infrastructure in September; partners laid or repaired 32 km of network.",
+     "source": "OCHA oPt via OCHA",
+     "date": "2026-10-05",
+     "url": "https://www.ochaopt.org/content/humanitarian-situation-report-2-october-2026",
+     "history": [
+      [
+       "2026-10-05",
+       "watch"
+      ],
+      [
+       "2026-10-19",
+       "steady"
+      ]
+     ],
+     "item": "wb-wash-incidents",
+     "photo": "jenin-tanks"
+    }
+   ]
+  },
+  {
+   "key": "air",
+   "name": "Air & waste",
+   "code": "A",
+   "stations": [
+    {
+     "code": "A1",
+     "short": "Gaza waste",
+     "place": "Gaza City",
+     "subject": "Solid waste dumps",
+     "area": "gaza",
+     "status": "steady",
+     "reading": "Cleared",
+     "word": true,
+     "what": "the Feras Market temporary dump was cleared in September; collection still relies on donkey carts and UN trucks.",
+     "source": "OCHA oPt via OCHA",
+     "date": "2026-10-19",
+     "url": "https://www.ochaopt.org/content/humanitarian-situation-report-15-october-2026",
+     "history": [
+      [
+       "2026-10-19",
+       "steady"
+      ]
+     ],
+     "item": "gaza-feras-dump"
+    },
+    {
+     "code": "A2",
+     "short": "Nablus air",
+     "place": "Nablus",
+     "subject": "AirAware air sensors",
+     "area": "wb-north",
+     "status": "silent",
+     "reading": "5",
+     "word": false,
+     "what": "air-quality stations launched with a public data platform. No reading or update has been published since.",
+     "source": "Environment Quality Authority via WAFA",
+     "date": "2026-09-16",
+     "url": "https://www.wafa.ps/Pages/Details/154122",
+     "history": [
+      [
+       "2026-09-16",
+       "steady"
+      ]
+     ],
+     "item": "airaware-nablus",
+     "photo": "najah",
+     "silent_since": "2026-09-16"
+    },
+    {
+     "code": "A3",
+     "short": "Illegal dumps",
+     "place": "Qalandia, Jerusalem",
+     "subject": "Illegal waste dumps",
+     "area": "jerusalem",
+     "status": "steady",
+     "reading": "Closed",
+     "word": true,
+     "what": "the entrance to a dump used for smuggled waste was blocked with three barriers.",
+     "source": "Environment Quality Authority via WAFA",
+     "date": "2026-10-14",
+     "url": "https://www.wafa.ps/Pages/Details/155924",
+     "history": [
+      [
+       "2026-10-14",
+       "steady"
+      ]
+     ],
+     "item": "qalandia-dump",
+     "photo": "qalandia"
+    },
+    {
+     "code": "A4",
+     "short": "Landfills",
+     "place": "West Bank",
+     "subject": "Landfills and climate plan",
+     "area": "wb",
+     "status": "steady",
+     "reading": "175",
+     "word": false,
+     "what": "costed measures in Palestine's third climate plan, launched 19 Oct; a $25m landfill programme was reviewed on 15 Oct.",
+     "source": "Environment Quality Authority via WAFA",
+     "date": "2026-10-19",
+     "url": "https://www.wafa.ps/Pages/Details/156287",
+     "history": [
+      [
+       "2026-10-15",
+       "steady"
+      ],
+      [
+       "2026-10-19",
+       "steady"
+      ]
+     ],
+     "item": "ndc3",
+     "photo": "jordan-valley"
+    }
+   ]
+  },
+  {
+   "key": "power",
+   "name": "Power",
+   "code": "P",
+   "stations": [
+    {
+     "code": "P1",
+     "short": "Desal power",
+     "place": "Southern Gaza",
+     "subject": "Desalination plant power",
+     "area": "gaza",
+     "status": "watch",
+     "reading": "Faults",
+     "word": true,
+     "what": "OCHA cites 'electricity problems' at the Southern Gaza Desalination Plant as one cause of the water drop.",
+     "source": "OCHA oPt via OCHA",
+     "date": "2026-10-19",
+     "url": "https://www.ochaopt.org/content/humanitarian-situation-report-15-october-2026",
+     "history": [
+      [
+       "2026-10-19",
+       "watch"
+      ]
+     ],
+     "item": "gaza-desal-power"
+    },
+    {
+     "code": "P2",
+     "short": "Clinic fuel",
+     "place": "Gaza health facilities",
+     "subject": "Fuel, engine oil, spares",
+     "area": "gaza",
+     "status": "alert",
+     "reading": "Short",
+     "word": true,
+     "what": "fuel, engine oil and generator parts are short; dialysis and cancer care are at risk.",
+     "source": "OCHA oPt; UNRWA via OCHA",
+     "date": "2026-10-19",
+     "url": "https://www.ochaopt.org/content/humanitarian-situation-report-15-october-2026",
+     "history": [
+      [
+       "2026-10-19",
+       "alert"
+      ]
+     ],
+     "item": "gaza-fuel-oil-health"
+    },
+    {
+     "code": "P3",
+     "short": "Cooking gas",
+     "place": "al-Mawasi, Khan Younis",
+     "subject": "Cooking gas",
+     "area": "gaza",
+     "status": "alert",
+     "reading": "₪85/kg",
+     "word": false,
+     "what": "a kilo of cooking gas on the black market, against 75 shekels for an 8 kg cylinder from the distributor.",
+     "source": "WAFA reporter Tareq al-Astal via WAFA",
+     "date": "2026-10-04",
+     "url": "https://www.wafa.ps/Pages/Details/155227",
+     "history": [
+      [
+       "2026-10-04",
+       "alert"
+      ]
+     ],
+     "item": "gaza-cooking-gas",
+     "photo": "mawasi"
+    },
+    {
+     "code": "P4",
+     "short": "Nablus lines",
+     "place": "Beita & Burqa, Nablus",
+     "subject": "Village power lines",
+     "area": "wb-north",
+     "status": "alert",
+     "reading": "Day 3",
+     "word": true,
+     "what": "a Beita family without power after settler cuts; al-Masoudiya was cut for the fifth time on 12 Oct.",
+     "source": "Mohammed Hamayel, Beita activist; Palestinian Bar Association via WAFA",
+     "date": "2026-10-20",
+     "url": "https://english.wafa.ps/Pages/Details/176094",
+     "history": [
+      [
+       "2026-10-12",
+       "alert"
+      ],
+      [
+       "2026-10-20",
+       "alert"
+      ]
+     ],
+     "item": "beita-power",
+     "photo": "beita"
+    },
+    {
+     "code": "P5",
+     "short": "Wadi al-A'war",
+     "place": "Wadi al-A'war, Hebron",
+     "subject": "Village power lines",
+     "area": "wb-centre-south",
+     "status": "alert",
+     "reading": "~20 homes",
+     "word": false,
+     "what": "homes cut off when settlers severed the lines, the sixth time in a row.",
+     "source": "Farid Burqan, Birin village council via WAFA",
+     "date": "2026-10-12",
+     "url": "https://english.wafa.ps/Pages/Details/175766",
+     "history": [
+      [
+       "2026-10-12",
+       "alert"
+      ]
+     ],
+     "item": "wadi-awar-power",
+     "photo": "rashash"
+    },
+    {
+     "code": "P6",
+     "short": "Solar pumping",
+     "place": "Nablus governorate",
+     "subject": "Solar plant for water pumps",
+     "area": "wb-north",
+     "status": "steady",
+     "reading": "35,774 m²",
+     "word": false,
+     "what": "of land handed to the Water Authority for a solar plant to power its pumping stations.",
+     "source": "Palestinian Land Authority / Water Authority via WAFA",
+     "date": "2026-10-14",
+     "url": "https://www.wafa.ps/Pages/Details/155943",
+     "history": [
+      [
+       "2026-10-14",
+       "steady"
+      ]
+     ],
+     "item": "nablus-solar-water",
+     "photo": "jericho-solar"
+    }
+   ]
+  },
+  {
+   "key": "health",
+   "name": "Health",
+   "code": "H",
+   "stations": [
+    {
+     "code": "H1",
+     "short": "Gaza disease",
+     "place": "Gaza Strip",
+     "subject": "Communicable disease",
+     "area": "gaza",
+     "status": "watch",
+     "reading": "18.6%",
+     "word": false,
+     "what": "of consultations, 4–10 Oct, were for communicable disease; WHO warns of winter outbreaks.",
+     "source": "Health Cluster via OCHA",
+     "date": "2026-10-19",
+     "url": "https://www.ochaopt.org/content/humanitarian-situation-report-15-october-2026",
+     "history": [
+      [
+       "2026-10-02",
+       "watch"
+      ],
+      [
+       "2026-10-19",
+       "watch"
+      ]
+     ],
+     "item": "gaza-communicable"
+    },
+    {
+     "code": "H2",
+     "short": "Gaza medicines",
+     "place": "Gaza Strip",
+     "subject": "Essential medicines",
+     "area": "gaza",
+     "status": "alert",
+     "reading": "44%",
+     "word": false,
+     "what": "of essential medicines at zero stock; half the laboratory equipment is destroyed.",
+     "source": "Medical sources in Gaza via WAFA",
+     "date": "2026-10-08",
+     "url": "https://english.wafa.ps/Pages/Details/175647",
+     "history": [
+      [
+       "2026-10-04",
+       "watch"
+      ],
+      [
+       "2026-10-08",
+       "alert"
+      ]
+     ],
+     "item": "gaza-meds-zero",
+     "photo": "shifa"
+    },
+    {
+     "code": "H3",
+     "short": "Gaza hospitals",
+     "place": "Gaza Strip",
+     "subject": "Hospitals working",
+     "area": "gaza",
+     "status": "watch",
+     "reading": "35/57",
+     "word": false,
+     "what": "hospitals and field hospitals partly working, 1 Jan–30 Sep; WHO counts 88 attacks on health care.",
+     "source": "WHO via WHO EMRO / ReliefWeb",
+     "date": "2026-10-16",
+     "url": "https://www.emro.who.int/images/stories/palestine/Attacks_on_health_care_in_the_GS_30_Sep_26.pdf",
+     "history": [
+      [
+       "2026-10-16",
+       "watch"
+      ]
+     ],
+     "item": "gaza-hospitals-functional"
+    },
+    {
+     "code": "H4",
+     "short": "Gaza polio",
+     "place": "Gaza Strip",
+     "subject": "Polio (AFP) surveillance",
+     "area": "gaza",
+     "status": "silent",
+     "reading": "22",
+     "word": false,
+     "what": "acute flaccid paralysis cases this year, to 20 Sept. No surveillance update since.",
+     "source": "Health Cluster / WHO via OCHA",
+     "date": "2026-09-28",
+     "url": "https://www.ochaopt.org/content/humanitarian-situation-report-25-september-2026",
+     "history": [
+      [
+       "2026-09-28",
+       "watch"
+      ]
+     ],
+     "item": "gaza-afp",
+     "silent_since": "2026-09-28"
+    },
+    {
+     "code": "H5",
+     "short": "Masafer teams",
+     "place": "Masafer Yatta, Area C",
+     "subject": "Mobile medical teams",
+     "area": "area-c",
+     "status": "alert",
+     "reading": "Blocked",
+     "word": true,
+     "what": "settlers stopped medical teams on the way to Khirbet al-Majaz; 17 Area C locations have no mobile clinic.",
+     "source": "Osama Makhamreh, activist via WAFA",
+     "date": "2026-10-15",
+     "url": "https://english.wafa.ps/Pages/Details/175916",
+     "history": [
+      [
+       "2026-09-28",
+       "watch"
+      ],
+      [
+       "2026-10-15",
+       "alert"
+      ]
+     ],
+     "item": "masafer-medical",
+     "photo": "majaz"
+    },
+    {
+     "code": "H6",
+     "short": "WB attacks",
+     "place": "West Bank",
+     "subject": "Attacks on health care",
+     "area": "wb",
+     "status": "watch",
+     "reading": "146",
+     "word": false,
+     "what": "attacks on health care recorded by WHO, January to September.",
+     "source": "WHO via WHO EMRO / ReliefWeb",
+     "date": "2026-10-16",
+     "url": "https://www.emro.who.int/images/stories/palestine/Attacks_on_health_care_in_the_West_Bank_Jan-Sep_26.pdf",
+     "history": [
+      [
+       "2026-10-16",
+       "watch"
+      ]
+     ],
+     "item": "wb-health-attacks",
+     "photo": "salfit-hospital"
+    }
+   ]
+  }
+ ]
+}

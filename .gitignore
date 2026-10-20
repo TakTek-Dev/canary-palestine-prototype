@@ -1,0 +1,8 @@
+research/
+.impeccable/
+node_modules/
+__pycache__/
+tools/out/
+# internal product and design records stay local
+PRODUCT.md
+DESIGN.md
