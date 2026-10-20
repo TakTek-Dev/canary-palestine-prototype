@@ -12,7 +12,7 @@ import json
 import os
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-V = '11'                                      # bump on any asset change (Chrome caches hard)
+V = '13'                                      # bump on any asset change (Chrome caches hard)
 E = json.load(open(os.path.join(ROOT, 'tools', 'edition.json'), encoding='utf-8'))
 MARKS = json.load(open(os.path.join(ROOT, 'tools', 'out', 'marks.json'), encoding='utf-8'))   # written by brand.py
 PH = json.load(open(os.path.join(ROOT, 'tools', 'photos.json'), encoding='utf-8')) if os.path.exists(
@@ -21,6 +21,7 @@ PHOTOS = json.load(open(os.path.join(ROOT, 'tools', 'out', 'photos.json'), encod
     os.path.join(ROOT, 'tools', 'out', 'photos.json')) else {}
 
 esc = html.escape
+R = ''                                       # path back to the site root; '../' for report/ and station/ pages
 D = lambda s: dt.date.fromisoformat(s)
 LABEL = {'alert': 'Alert', 'watch': 'Watch', 'steady': 'Steady', 'silent': 'Silent'}
 CALL = {'alert': 'the alarm call', 'watch': 'the song breaking', 'steady': 'the song', 'silent': 'no call'}
@@ -54,6 +55,7 @@ SPRITE = '''<svg width="0" height="0" style="position:absolute" aria-hidden="tru
 <symbol id="i-down" viewBox="0 0 16 16"><path d="M8 3v10M3.5 8.5 8 13l4.5-4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
 <symbol id="i-right" viewBox="0 0 16 16"><path d="M3 8h10M8.5 3.5 13 8l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
 <symbol id="i-bell" viewBox="0 0 16 16"><path d="M8 2.5a4 4 0 0 1 4 4V10l1.5 2h-11L4 10V6.5a4 4 0 0 1 4-4zM6.5 14h3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></symbol>
+<symbol id="i-link" viewBox="0 0 16 16"><path d="M6.5 9.5l3-3M7 4.5l1-1a2.8 2.8 0 0 1 4 4l-1 1M9 11.5l-1 1a2.8 2.8 0 0 1-4-4l1-1" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
 <symbol id="i-ear" viewBox="0 0 16 16"><path d="M4.5 6a3.5 3.5 0 1 1 6.4 2c-.9 1.3-1.9 1.9-1.9 3.4A2 2 0 0 1 7 13.5M6.6 6.2a1.4 1.4 0 1 1 2.4 1" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
 </defs></svg>'''
 
@@ -110,11 +112,12 @@ def note_path(s, x, cy):
     return ''
 
 
-def sonogram(compact=False):
+def sonogram(compact=False, only=None):
+    """only: a line key, to draw one band (the line pages)."""
     g = G(compact)
     y = 26
     parts, reps, lanes = [], [], []
-    for line in E['lines']:
+    for line in (l for l in E['lines'] if not only or l['key'] == only):
         y += g.BG
         name = line['name'].upper().replace(' & WASTE', '') if compact else line['name'].upper()
         parts.append(f'<text class="band-l" x="0" y="{y - 6}">{esc(name)}</text>')
@@ -133,7 +136,7 @@ def sonogram(compact=False):
                     lab += f'. Reading {st["reading"]}'
                 v = st['reading'] if d == st['date'] else LABEL[s]
                 reps.append(
-                    f'<a class="rep {s}" href="#{st["code"].lower()}" data-s="{s}" data-line="{line["key"]}" data-x="{x:.1f}" '
+                    f'<a class="rep {s}" href="{slink(st["code"])}" data-s="{s}" data-line="{line["key"]}" data-x="{x:.1f}" '
                     f'data-code="{st["code"]}" data-date="{day(d)}" data-label="{LABEL[s]}" data-place="{esc(st["place"])} · {esc(st["subject"])}" '
                     f'data-v="{esc(v)}" style="--d:{350 + int((x - g.LX) * (3 if compact else 1.4))}" aria-label="{esc(lab)}">'
                     f'<rect class="hit" x="{x - 10:.1f}" y="{cy - 9:.1f}" width="20" height="18"/>'
@@ -159,7 +162,7 @@ def sonogram(compact=False):
     lead_codes = set(E['lead']['codes'])
     leadbox = ''.join(f'<rect class="lead-mark" x="{g.x(st["date"]) - 12:.1f}" y="{cy - 10:.1f}" width="24" height="20"/>'
                       for st, cy in lanes if st['code'] in lead_codes and D(st['date']) >= g.W0)
-    n_st = sum(1 for _ in stations())
+    n_st = sum(len(l['stations']) for l in E['lines'] if not only or l['key'] == only)
     desc = (f'A sonogram of the network. Time runs left to right from {day(g.W0)} to today, {day(TODAY)}. '
             "Each row is a station; each mark is a report drawn as the canary's call: an alarm call for an alert, "
             'a breaking song for a watch, a full song for steady. A dotted bracket is a silence: no report since that date.')
@@ -214,11 +217,11 @@ def station_card(line, st, plates=False):
     else:
         val = f'<p class="val{" word" if st.get("word") else ""}">{esc(st["reading"])}</p>'
     src = '' if s == 'silent' and not st.get('url') else \
-        f'<p class="src">{esc(st["source"])} · <a href="{esc(st["url"])}" rel="noopener">{day(st["date"])}</a></p>'
+        f'<p class="src">{esc(st["source"])} · <a href="{rlink(st["item"])}">{day(st["date"])}</a></p>'
     fig = f'<figure class="st-ph">{photo(st.get("photo"), "r32")}{caption(st.get("photo"), True)}</figure>' if has(st.get('photo')) else (plate(st) if plates else '')
     return (f'<article class="st{" has-ph" if fig else ""}" id="{st["code"].lower()}" data-s="{s}" aria-labelledby="h-{st["code"].lower()}">'
             f'{fig}<div class="st-top"><span class="code">{st["code"]}</span><span class="chip lab">{call(s)}{LABEL[s]}</span></div>'
-            f'<h4 id="h-{st["code"].lower()}">{esc(st["place"])}<span class="sr"> · </span><span class="p">{esc(st["subject"])}</span></h4>'
+            f'<h4 id="h-{st["code"].lower()}"><a href="{slink(st["code"])}">{esc(st["place"])}<span class="sr"> · </span><span class="p">{esc(st["subject"])}</span></a></h4>'
             f'{val}<p class="what">{esc(st["what"])}</p>{lane(st)}{src}</article>')
 
 
@@ -228,7 +231,7 @@ def photo(slug, ratio='r43', pos=None, eager=False):
     pos = pos or PH[slug].get('pos')
     p = PHOTOS[slug]
     style = f' style="object-position:{pos}"' if pos else ''
-    return (f'<div class="scan {ratio}"><img src="assets/img/photo/{slug}.webp?v={V}" width="{p["w"]}" height="{p["h"]}" '
+    return (f'<div class="scan {ratio}"><img src="{R}assets/img/photo/{slug}.webp?v={V}" width="{p["w"]}" height="{p["h"]}" '
             f'alt="{esc(PH[slug]["alt"])}" loading="{"eager" if eager else "lazy"}" decoding="async"{style}></div>')
 
 
@@ -241,8 +244,99 @@ def caption(slug, short=False):
     return f'<figcaption><b>{esc(c["year"])}</b>{esc(c["caption"])} Photo: {esc(c["credit"])}</figcaption>'
 
 
+def rlink(rid):
+    return f'{R}report/{rid}.html'
+
+
+def slink(code):
+    return f'{R}station/{code.lower()}.html'
+
+
 def has(slug):
     return bool(slug) and slug in PHOTOS
+
+
+
+# ---------------------------------------------------------------- the shell every page shares
+def tally():
+    t = {k: 0 for k in RANK}
+    for _, st in stations():
+        t[st['status']] += 1
+    return t
+
+
+def head(title, desc, canonical='', loader=''):
+    return f"""<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{esc(title)}</title>
+<meta name="description" content="{esc(desc)}">
+<meta name="theme-color" content="#0E100D">
+<meta property="og:type" content="website">
+<meta property="og:title" content="{esc(title)}">
+<meta property="og:description" content="{esc(desc)}">
+<meta property="og:image" content="https://taktek-dev.github.io/canary-palestine-prototype/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="{R}favicon.svg?v={V}" type="image/svg+xml">
+<link rel="preload" href="{R}assets/fonts/geologica.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{R}assets/fonts/martian-mono.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="{R}assets/css/cp.css?v={V}">
+<script>document.documentElement.classList.add('js')</script>
+</head>
+<body>
+{SPRITE}
+<a class="skip" href="#main">Skip to the content</a>
+{loader}"""
+
+
+def top(current=None, home=False):
+    t = tally()
+    n_st = sum(t.values())
+    worst = min((st['status'] for _, st in stations() if st['status'] != 'silent'), key=RANK.get)
+    cur = lambda k: ' aria-current="page"' if k == current else ''
+    nav = ''.join(f'<li><a href="{R}{l["key"]}.html"{cur(l["key"])}><span class="code">{l["code"]}</span>{esc(l["name"])}</a></li>' for l in E['lines'])
+    nav += (f'<li><a href="{R}home.html#silence">Silence</a></li><li><a href="{R}home.html#reporting">Reporting</a></li>'
+            f'<li><a href="{R}about.html"{cur("about")}>About</a></li>')
+    hear = ('<button class="btn ghost" type="button" data-hear="jump" aria-pressed="false" data-on="Stop" data-off="Hear the network">'
+            '<svg aria-hidden="true"><use href="#i-ear"/></svg><span class="lbl">Hear the network</span></button>') if home else \
+           (f'<a class="btn ghost" href="{R}home.html#listen"><svg aria-hidden="true"><use href="#i-ear"/></svg>Hear the network</a>')
+    return f"""<div class="top">
+  <div class="util"><div class="wrap">
+    <p class="g"><time datetime="{E["date"]}">{E["weekday"]} {day(E["date"], True)}</time><span>Last sweep <b>{E["sweep"]}</b> Jerusalem</span></p>
+    <p class="tally g" aria-label="Network today: {t["alert"]} alert, {t["watch"]} watch, {t["steady"]} steady, {t["silent"]} silent">
+      <span>{call("alert")}<b>{t["alert"]}</b> alert</span><span>{call("watch")}<b>{t["watch"]}</b> watch</span><span>{call("steady")}<b>{t["steady"]}</b> steady</span><span>{call("silent")}<b>{t["silent"]}</b> silent</span></p>
+  </div></div>
+  <header class="mast"><div class="wrap">
+    <a class="brand" href="{R}home.html" aria-label="Canary Palestine, home">{wordmark()}
+      <span class="now g" aria-hidden="true">{call(worst)}<span>{n_st} stations</span></span></a>
+    <nav class="nav" aria-label="Sections"><ul>{nav}</ul></nav>
+    <div class="acts">{hear}<a class="btn hot" href="{R}home.html#alerts"><svg aria-hidden="true"><use href="#i-bell"/></svg>Station alerts</a></div>
+  </div></header>
+</div>
+"""
+
+
+def foot(scripts=('voice', 'cp')):
+    js = ''.join(f'<script src="{R}assets/js/{n}.js?v={V}" defer></script>\n' for n in scripts)
+    lines = ''.join(f'<li><a href="{R}{l["key"]}.html">{esc(l["name"])}</a></li>' for l in E['lines'])
+    return f"""<footer class="foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div><a href="{R}home.html" aria-label="Canary Palestine, home">{wordmark("wm")}</a>
+        <p class="about">{esc(E["about"])}</p></div>
+      <nav aria-labelledby="fn-1"><h2 id="fn-1" class="lab">Network</h2><ul>{lines}</ul></nav>
+      <nav aria-labelledby="fn-2"><h2 id="fn-2" class="lab">Desk</h2><ul><li><a href="{R}home.html#reporting">Reporting</a></li><li><a href="{R}about.html#method">How statuses are set</a></li><li><a href="{R}about.html#corrections">Corrections</a></li><li><a href="{R}about.html#send">Send a report</a></li></ul></nav>
+      <nav aria-labelledby="fn-3"><h2 id="fn-3" class="lab">Follow</h2><ul><li><a href="{R}home.html#alerts">Station alerts</a></li><li><a href="#" aria-disabled="true">Telegram · soon</a></li><li><a href="#" aria-disabled="true">RSS · soon</a></li><li><a href="{R}index.html">The identity</a></li></ul></nav>
+    </div>
+    <div class="fine g"><p>© 2026 Canary Palestine · prototype</p><p>Statuses are the desk's reading of named reports, not official alerts.</p></div>
+  </div>
+</footer>
+<script src="{R}assets/js/marks.js?v={V}"></script>
+{js}</body>
+</html>
+"""
 
 
 def page():
@@ -259,7 +353,7 @@ def page():
     nav += '<li><a href="#silence">Silence</a></li><li><a href="#reporting">Reporting</a></li>'
 
     newest = ''.join(
-        f'<li><a href="#{n["code"].lower()}">{photo(n.get("photo"), "thumb") if has(n.get("photo")) else '<span class="scan thumb none"></span>'}'
+        f'<li><a href="{rlink(n["id"])}">{photo(n.get("photo"), "thumb") if has(n.get("photo")) else '<span class="scan thumb none"></span>'}'
         f'<span class="nt"><span class="g"><time datetime="{n["date"]}">{day(n["date"])}</time> · <span class="code">{n["code"]}</span></span>{esc(n["text"])}</span></a></li>'
         for n in E['newest'])
 
@@ -290,12 +384,12 @@ def page():
             extra = '<ul class="pts">' + ''.join(f'<li><b>{esc(a)}</b><span>{esc(b)}</span></li>' for a, b in c['points']) + '</ul>'
         cards.append(f'<article class="card" data-s="{c["s"]}" aria-labelledby="c-{c["id"]}">{fig}'
                      f'<p class="kick lab"><span class="tag">{call(c["s"])}{esc(c["codes"])}</span>{esc(c["kicker"])}</p>'
-                     f'<h3 id="c-{c["id"]}" class="hl"><a href="{esc(c["url"])}" rel="noopener">{esc(c["headline"])}</a></h3>'
+                     f'<h3 id="c-{c["id"]}" class="hl"><a href="{rlink(c["rid"])}">{esc(c["headline"])}</a></h3>'
                      f'{"<p class=sum>" + esc(c["summary"]) + "</p>" if c.get("summary") else ""}{extra}'
                      f'<p class="src">{esc(c["src"])}</p></article>')
 
     more = ''.join(
-        f'<article class="mr" data-s="{m["s"]}"><a href="{esc(m["url"])}" rel="noopener">{photo(m.get("photo"), "r32")}'
+        f'<article class="mr" data-s="{m["s"]}"><a href="{rlink(m["id"])}">{photo(m.get("photo"), "r32")}'
         f'<p class="kick lab"><span class="tag">{call(m["s"])}{esc(m["codes"])}</span>{day(m["date"])}</p>'
         f'<h3 class="hl">{esc(m["headline"])}</h3></a><p class="src">{esc(m["src"])}</p></article>'
         for m in E.get('more', []))
@@ -314,65 +408,27 @@ def page():
 
     desc = E['description']
     title = f'Canary Palestine · {E["weekday"]} {day(E["date"], True)}'
-    return f'''<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>{esc(title)}</title>
-<meta name="description" content="{esc(desc)}">
-<meta name="theme-color" content="#0E100D">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Canary Palestine">
-<meta property="og:description" content="{esc(desc)}">
-<meta property="og:image" content="https://taktek-dev.github.io/canary-palestine-prototype/assets/og.png">
-<meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="favicon.svg?v={V}" type="image/svg+xml">
-<link rel="preload" href="assets/fonts/geologica.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/fonts/martian-mono.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/cp.css?v={V}">
-<script>document.documentElement.classList.add('js')</script>
-</head>
-<body>
-{SPRITE}
-<a class="skip" href="#main">Skip to the reports</a>
-<div class="first" aria-hidden="true">
+    loader = f'''<div class="first" aria-hidden="true">
   <svg viewBox="0 0 300 150">{first_head}{first_notes}<path class="stylus" d="M0 128H300"/><text class="cap" x="150" y="146" text-anchor="middle" style="opacity:0">LISTENING · {n_st} STATIONS · {E["sweep"]} JERUSALEM</text></svg>
 </div>
-
-<div class="top">
-  <div class="util"><div class="wrap">
-    <p class="g"><time datetime="{E["date"]}">{E["weekday"]} {day(E["date"], True)}</time><span>Last sweep <b>{E["sweep"]}</b> Jerusalem</span></p>
-    <p class="tally g" aria-label="Network today: {tally["alert"]} alert, {tally["watch"]} watch, {tally["steady"]} steady, {tally["silent"]} silent">
-      <span>{call("alert")}<b>{tally["alert"]}</b> alert</span><span>{call("watch")}<b>{tally["watch"]}</b> watch</span><span>{call("steady")}<b>{tally["steady"]}</b> steady</span><span>{call("silent")}<b>{tally["silent"]}</b> silent</span></p>
-  </div></div>
-  <header class="mast"><div class="wrap">
-    <a class="brand" href="./home.html" aria-label="Canary Palestine, home">{wordmark()}
-      <span class="now g" aria-hidden="true">{call(worst)}<span>{n_st} stations</span></span></a>
-    <nav class="nav" aria-label="Sections"><ul>{nav}</ul></nav>
-    <div class="acts">
-      <button class="btn ghost" type="button" data-hear="jump" aria-pressed="false" data-on="Stop" data-off="Hear the network"><svg aria-hidden="true"><use href="#i-ear"/></svg><span class="lbl">Hear the network</span></button>
-      <a class="btn hot" href="#alerts"><svg aria-hidden="true"><use href="#i-bell"/></svg>Station alerts</a>
-    </div>
-  </div></header>
-</div>
-
+'''
+    return head(title, desc, loader=loader) + top(home=True) + f'''
 <main id="main">
   <section class="post" aria-label="The listening post">
     <div class="wrap post-grid">
       <article class="lead" data-s="{L["status"]}" aria-labelledby="lead-h">
         {f'<figure class="lead-ph rise" style="--i:0">{photo(L.get("photo"), "r21", eager=True)}{caption(L.get("photo"), True)}</figure>' if has(L.get('photo')) else ''}
         <p class="status lab rise" style="--i:0">{call(L["status"])}<span>{LABEL[L["status"]]} · {" + ".join(L["codes"])}</span><span class="bg">{esc(L["when"])}</span></p>
-        <h1 id="lead-h" class="hl rise" style="--i:1"><a href="#{L["codes"][0].lower()}">{esc(L["headline"])}</a></h1>
+        <h1 id="lead-h" class="hl rise" style="--i:1"><a href="{rlink(L["id"])}">{esc(L["headline"])}</a></h1>
         <p class="dek rise" style="--i:2">{esc(L["dek"])}</p>
         <div class="reading rise" style="--i:3"><p class="v">{esc(reading["reading"])}</p><p>{esc(L["reading_note"])}</p></div>
         <p class="src g rise" style="--i:4">{esc(L["src"])}</p>
-        <a class="more rise" style="--i:5" href="#reporting">Read the report<svg aria-hidden="true"><use href="#i-down"/></svg></a>
+        <a class="more rise" style="--i:5" href="{rlink(L["id"])}">Read the report<svg aria-hidden="true"><use href="#i-right"/></svg></a>
 
       </article>
-      <div class="net">
+      <div class="net" id="listen">
         <div class="sono-h rise" style="--i:1">
-          <div><h2>The listening post</h2><p>Every report on the network in the last <span class="d-only">30</span><span class="m-only">14</span> days, drawn as the canary's call. Hover or tab through a mark; follow it to the station.</p></div>
+          <div><h2>The listening post</h2><p>Every report on the network in the last <span class="d-only">30</span><span class="m-only">14</span> days, drawn as the canary's call. Hover or tab through a mark; open it for the station's page.</p></div>
           <button class="btn play" type="button" data-hear="here" aria-pressed="false" data-on="Stop" data-off="Hear the month"><svg class="ico" aria-hidden="true"><use href="#i-ear"/></svg><span class="eq" aria-hidden="true"><i></i><i></i><i></i></span><span class="lbl">Hear the month</span></button>
         </div>
         <div class="sono">{sonogram()}{sonogram(True)}<div class="tip" aria-hidden="true"></div></div>
@@ -409,8 +465,9 @@ def page():
         <figure>{photo(F["photo"], "r43", eager=False)}{caption(F["photo"])}</figure>
         <div>
           <p class="kick lab"><span class="tag">{call(F["s"])}{esc(F["codes"])}</span>{esc(F["kicker"])}</p>
-          <h2 id="f-h" class="hl">{esc(F["headline"])}</h2>
+          <h2 id="f-h" class="hl"><a href="{rlink(F["id"])}">{esc(F["headline"])}</a></h2>
           <div class="body">{feat_body}</div>
+          <a class="more-l" href="{rlink(F["id"])}">The full report<svg aria-hidden="true"><use href="#i-right"/></svg></a>
         </div>
       </article>
       <div class="cards">{"".join(cards)}</div>
@@ -430,25 +487,7 @@ def page():
     </div>
   </section>
 </main>
-
-<footer class="foot">
-  <div class="wrap">
-    <div class="foot-grid">
-      <div><a href="./home.html" aria-label="Canary Palestine, home">{wordmark("wm")}</a>
-        <p class="about">{esc(E["about"])}</p></div>
-      <nav aria-labelledby="fn-1"><h2 id="fn-1" class="lab">Network</h2><ul>{"".join(f'<li><a href="#rack-{l["key"]}">{esc(l["name"])}</a></li>' for l in E["lines"])}</ul></nav>
-      <nav aria-labelledby="fn-2"><h2 id="fn-2" class="lab">Desk</h2><ul><li><a href="#reporting">Reporting</a></li><li><a href="index.html#calls">How statuses are set</a></li><li><a href="#">Corrections</a></li><li><a href="#">Send a report</a></li></ul></nav>
-      <nav aria-labelledby="fn-3"><h2 id="fn-3" class="lab">Follow</h2><ul><li><a href="#alerts">Station alerts</a></li><li><a href="#">Telegram</a></li><li><a href="#">RSS</a></li><li><a href="index.html">The identity</a></li></ul></nav>
-    </div>
-    <div class="fine g"><p>© 2026 Canary Palestine · prototype</p><p>Statuses are the desk's reading of named reports, not official alerts.</p></div>
-  </div>
-</footer>
-<script src="assets/js/marks.js?v={V}"></script>
-<script src="assets/js/voice.js?v={V}" defer></script>
-<script src="assets/js/cp.js?v={V}" defer></script>
-</body>
-</html>
-'''
+''' + foot()
 
 
 if __name__ == '__main__':

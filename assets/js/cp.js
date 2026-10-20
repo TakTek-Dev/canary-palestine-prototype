@@ -141,6 +141,13 @@
                          : 'Choose at least one station to follow.';
   });
 
+  /* ---------- 5 share: copy the page's link ---------- */
+  $$('[data-copy]').forEach((b) => b.addEventListener('click', async () => {
+    const box = b.closest('.share'), note = box && $('.note', box);
+    try { await navigator.clipboard.writeText(b.dataset.copy); if (note) note.textContent = 'Link copied.'; }
+    catch (e) { if (note) note.textContent = b.dataset.copy; }
+  }));
+
   firstCall();
   if (location.hash) setTimeout(() => flash(location.hash.slice(1)), 600);
 })();
