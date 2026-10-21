@@ -118,7 +118,7 @@ def station(code, short, place, subject, area, items, key=None, status=None, rea
     st = {'code': code, 'short': short, 'place': place, 'subject': subject, 'area': area,
           'status': status or it['status'], 'reading': reading or it['reading'], 'word': word,
           'what': what or it['reading_note'], 'source': src(key), 'date': it['published'], 'url': it['url'],
-          'history': [list(h) for h in hist], 'item': key}
+          'history': [list(h) for h in hist], 'item': key, 'items': list(items)}
     if photo:
         st['photo'] = photo
     if silent:
@@ -209,35 +209,35 @@ EDITION = {
         'src': 'OCHA humanitarian situation report of 15 Oct (published 19 Oct), WASH Cluster data',
     },
     'newest': [
-        {'date': '2026-10-20', 'code': 'P4', 'text': 'Beita family without power for a third day', 'photo': 'beita'},
-        {'date': '2026-10-19', 'code': 'A4', 'text': 'Third climate plan sets out 175 costed measures', 'photo': 'jordan-valley'},
-        {'date': '2026-10-19', 'code': 'W4', 'text': '950,000 people in flood-risk sites before the rains', 'photo': 'wadi-gaza'},
-        {'date': '2026-10-18', 'code': 'W8', 'text': 'Beit Ula loses about 60% of its water', 'photo': 'salfit-wwtp'},
-        {'date': '2026-10-15', 'code': 'H5', 'text': 'Medical teams stopped on the way to al-Majaz', 'photo': 'majaz'},
+        {'id': 'beita-power', 'date': '2026-10-20', 'code': 'P4', 'text': 'Beita family without power for a third day', 'photo': 'beita'},
+        {'id': 'ndc3', 'date': '2026-10-19', 'code': 'A4', 'text': 'Third climate plan sets out 175 costed measures', 'photo': 'jordan-valley'},
+        {'id': 'gaza-flood-sites', 'date': '2026-10-19', 'code': 'W4', 'text': '950,000 people in flood-risk sites before the rains', 'photo': 'wadi-gaza'},
+        {'id': 'beit-ula-loss', 'date': '2026-10-18', 'code': 'W8', 'text': 'Beit Ula loses about 60% of its water', 'photo': 'salfit-wwtp'},
+        {'id': 'masafer-medical', 'date': '2026-10-15', 'code': 'H5', 'text': 'Medical teams stopped on the way to al-Majaz', 'photo': 'majaz'},
     ],
     'silence': {'title': 'Silence is the signal.',
                 'say': 'A canary that stops singing is the warning. When a station has had no public report for weeks, the desk does not fill the gap; it counts the days and asks why.'},
-    'feature': {'s': 'alert', 'codes': 'P4 · al-Masoudiya', 'kicker': 'Power · Nablus · 12 Oct', 'photo': 'masudiya',
+    'feature': {'s': 'alert', 'codes': 'P4 · al-Masoudiya', 'kicker': 'Power · Nablus · 12 Oct', 'photo': 'masudiya', 'id': 'masoudiya-power',
                 'headline': 'Five times in two months, settlers have cut al-Masoudiya\'s power',
                 'body': P_('masoudiya-power')['body'].split('\n\n') if isinstance(P_('masoudiya-power')['body'], str) else P_('masoudiya-power')['body']},
     'cards': [
-        {'id': 'meds', 's': 'alert', 'codes': 'H2', 'kicker': 'Health · Gaza', 'photo': 'shifa', 'url': P_('gaza-meds-zero')['url'],
+        {'id': 'meds', 'rid': 'gaza-meds-zero', 's': 'alert', 'codes': 'H2', 'kicker': 'Health · Gaza', 'photo': 'shifa', 'url': P_('gaza-meds-zero')['url'],
          'headline': 'Gaza hospitals have none of 44% of their essential medicines', 'summary': P_('gaza-meds-zero')['summary'].split('. Imaging')[0] + '.',
          'src': src('gaza-meds-zero') + ' · 8 Oct'},
-        {'id': 'flood', 's': 'alert', 'codes': 'W4', 'kicker': 'Water · Gaza', 'photo': 'mawasi', 'url': P_('gaza-flood-sites')['url'],
+        {'id': 'flood', 'rid': 'gaza-flood-sites', 's': 'alert', 'codes': 'W4', 'kicker': 'Water · Gaza', 'photo': 'mawasi', 'url': P_('gaza-flood-sites')['url'],
          'headline': 'Before the rains, 950,000 displaced people live where floods reach', 'summary': P_('gaza-flood-sites')['summary'].split(' IOM')[0],
          'src': src('gaza-flood-sites') + ' · 19 Oct'},
-        {'id': 'himma', 's': 'alert', 'codes': 'W6', 'kicker': 'Water · Jordan Valley', 'photo': 'maleh', 'url': P_('himma-spring')['url'],
+        {'id': 'himma', 'rid': 'himma-spring', 's': 'alert', 'codes': 'W6', 'kicker': 'Water · Jordan Valley', 'photo': 'maleh', 'url': P_('himma-spring')['url'],
          'headline': 'Settlers pour concrete at al-Himma spring', 'summary': P_('himma-spring')['summary'],
          'src': src('himma-spring') + ' · 7 Oct'},
-        {'id': 'attacks', 's': 'watch', 'codes': 'H6', 'kicker': 'Health · West Bank', 'photo': 'salfit-hospital', 'url': P_('wb-health-attacks')['url'],
+        {'id': 'attacks', 'rid': 'wb-health-attacks', 's': 'watch', 'codes': 'H6', 'kicker': 'Health · West Bank', 'photo': 'salfit-hospital', 'url': P_('wb-health-attacks')['url'],
          'headline': '146 attacks on West Bank health care this year',
          'points': [['146', 'attacks recorded by WHO, 1 Jan–30 Sep'], ['113', 'health transports affected'], ['25', 'health facilities affected'],
                     ['131', 'cases of care being obstructed']],
          'src': src('wb-health-attacks') + ' · 16 Oct'},
     ],
     'more': [
-        {'s': N[i]['status'], 'codes': c, 'date': N[i]['published'], 'photo': ph, 'url': N[i]['url'], 'headline': N[i]['headline'],
+        {'id': i, 's': N[i]['status'], 'codes': c, 'date': N[i]['published'], 'photo': ph, 'url': N[i]['url'], 'headline': N[i]['headline'],
          'src': src(i)}
         for i, c, ph in [('tammun-loss', 'W6', 'tammun'), ('kharas-wwtp', 'W8', 'salfit-wwtp'), ('beit-iksa-sewage', 'W', 'beit-iksa'),
                          ('deirat-well', 'W8', 'athaba'), ('wb-wash-networks', 'W9', 'asira'), ('area-c-mobile-clinics', 'H5', 'pmrs')]
@@ -245,8 +245,45 @@ EDITION = {
     'lines': LINES,
 }
 
+
+# ---------------------------------------------------------------- report pages
+# Every sourced item gets a page. Its photo is the one the research matched to it (suggested_for, then
+# also_fits), only if that photo is in the set above; otherwise the page carries its station's call.
+FILE2SLUG = {f: slug for slug, (f, *_rest) in PHOTO.items()}
+RESEARCH_PHOTOS = json.load(open(os.path.join(ROOT, 'research', 'photos.json'), encoding='utf-8'))
+
+
+def report_photo(i):
+    for r in RESEARCH_PHOTOS:
+        if r['suggested_for'] == i and r['file'] in FILE2SLUG:
+            return FILE2SLUG[r['file']]
+    for r in RESEARCH_PHOTOS:
+        if i in (r.get('also_fits') or []) and r['file'] in FILE2SLUG:
+            return FILE2SLUG[r['file']]
+    return None
+
+
+STATION_OF = {i: st['code'] for l in LINES for st in l['stations'] for i in st['items']}
+EXTRA_PHOTO = {'masoudiya-power': 'masudiya', 'gaza-water-production': 'kh-pumps'}
+KEEP = ('id', 'date', 'published', 'line', 'area', 'place', 'subject', 'status', 'reading', 'reading_note', 'headline', 'summary',
+        'source', 'via', 'url', 'background')
+EDITION['reports'] = []
+for i, it in N.items():
+    if it.get('confidence') != 'verified':
+        continue
+    body = it.get('body') or ''
+    r = {k: it[k] for k in KEEP}
+    r['body'] = [b for b in body.split(chr(10) * 2) if b.strip()] if isinstance(body, str) else body
+    r['station'] = STATION_OF.get(i)
+    r['photo'] = EXTRA_PHOTO.get(i) or report_photo(i)
+    r['src'] = src(i)
+    EDITION['reports'].append(r)
+EDITION['reports'].sort(key=lambda r: (r['published'], r['date']), reverse=True)
+
 if __name__ == '__main__':
     json.dump(EDITION, open(os.path.join(ROOT, 'tools', 'edition.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
     json.dump(photos(), open(os.path.join(ROOT, 'tools', 'photos.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
     n = sum(len(l['stations']) for l in LINES)
     print('stations', n, 'with photo', sum(1 for l in LINES for s in l['stations'] if s.get('photo')))
+    rs = EDITION['reports']
+    print('reports', len(rs), 'with photo', sum(1 for r in rs if r['photo']), 'no station', [r['id'] for r in rs if not r['station']])

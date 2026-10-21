@@ -324,7 +324,7 @@ def page():
     <div class="ch-h">{no(10, "Applications")}<div><h2 id="h-apps">Out in the world</h2>
       <p class="say">The same few pieces carry everywhere: the head, the call, a reading in Martian Mono, a sentence that names its source. An alert looks like an alert at any size, because its call does not depend on colour.</p></div></div>
     <div class="apps">
-      <figure style="grid-column:span 7"><div class="og og-ph" style="--ph:url(assets/img/photo/{E["lead"]["photo"]}.webp?v={V})"><svg class="wm" viewBox="0 0 {MARKS["wordmark"]["w"]} {MARKS["wordmark"]["h"]}" aria-hidden="true"><path class="h" d="{MARKS["wordmark"]["head"]}" fill-rule="evenodd"/><path class="l" d="{MARKS["wordmark"]["letters"]}"/><path class="p" d="{MARKS["wordmark"]["pal"]}"/></svg>
+      <figure style="grid-column:span 7"><div class="og og-ph"><span class="og-img" style="background-image:url(assets/img/photo/{E["lead"]["photo"]}.webp?v={V})"></span><svg class="wm" viewBox="0 0 {MARKS["wordmark"]["w"]} {MARKS["wordmark"]["h"]}" aria-hidden="true"><path class="h" d="{MARKS["wordmark"]["head"]}" fill-rule="evenodd"/><path class="l" d="{MARKS["wordmark"]["letters"]}"/><path class="p" d="{MARKS["wordmark"]["pal"]}"/></svg>
         <h3>{esc(E["lead"]["headline"])}</h3><p class="r">{call(E["lead"]["status"])}{esc(lead["reading"])}<small>{esc(E["lead"]["reading_note"])}</small></p></div>
         <figcaption class="note-s">Link card, 1200 × 630: the lead's headline set sharp, its reading in canary, its photograph.</figcaption></figure>
       <figure style="grid-column:span 5"><div class="post-card"><p class="top-r"><span>{(sil or lead)["code"]} · SILENT</span><img src="assets/brand/mark-silent.svg?v={V}" alt="" width="150" height="64"></p>
