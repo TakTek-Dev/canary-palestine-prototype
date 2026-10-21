@@ -12,7 +12,7 @@ import json
 import os
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-V = '13'                                      # bump on any asset change (Chrome caches hard)
+V = '16'                                      # bump on any asset change (Chrome caches hard)
 E = json.load(open(os.path.join(ROOT, 'tools', 'edition.json'), encoding='utf-8'))
 MARKS = json.load(open(os.path.join(ROOT, 'tools', 'out', 'marks.json'), encoding='utf-8'))   # written by brand.py
 PH = json.load(open(os.path.join(ROOT, 'tools', 'photos.json'), encoding='utf-8')) if os.path.exists(
@@ -55,6 +55,7 @@ SPRITE = '''<svg width="0" height="0" style="position:absolute" aria-hidden="tru
 <symbol id="i-down" viewBox="0 0 16 16"><path d="M8 3v10M3.5 8.5 8 13l4.5-4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
 <symbol id="i-right" viewBox="0 0 16 16"><path d="M3 8h10M8.5 3.5 13 8l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
 <symbol id="i-bell" viewBox="0 0 16 16"><path d="M8 2.5a4 4 0 0 1 4 4V10l1.5 2h-11L4 10V6.5a4 4 0 0 1 4-4zM6.5 14h3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></symbol>
+<symbol id="i-search" viewBox="0 0 16 16"><path d="M7 2.5a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9zM10.4 10.4 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
 <symbol id="i-link" viewBox="0 0 16 16"><path d="M6.5 9.5l3-3M7 4.5l1-1a2.8 2.8 0 0 1 4 4l-1 1M9 11.5l-1 1a2.8 2.8 0 0 1-4-4l1-1" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
 <symbol id="i-ear" viewBox="0 0 16 16"><path d="M4.5 6a3.5 3.5 0 1 1 6.4 2c-.9 1.3-1.9 1.9-1.9 3.4A2 2 0 0 1 7 13.5M6.6 6.2a1.4 1.4 0 1 1 2.4 1" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
 </defs></svg>'''
@@ -167,7 +168,7 @@ def sonogram(compact=False, only=None):
             "Each row is a station; each mark is a report drawn as the canary's call: an alarm call for an alert, "
             'a breaking song for a watch, a full song for steady. A dotted bracket is a silence: no report since that date.')
     return (f'<svg class="{"sono-m" if compact else "sono-d"}" viewBox="0 0 {g.SW} {H}" width="{g.SW}" height="{H}" '
-            f'data-x0="{g.LX}" data-x1="{g.SW - g.RX}" role="group" aria-labelledby="{g.id}-t" aria-describedby="{g.id}-d">'
+            f'data-x0="{g.LX}" data-x1="{g.SW - g.RX}" data-k="{3 if compact else 1.4}" role="group" aria-labelledby="{g.id}-t" aria-describedby="{g.id}-d">'
             f'<title id="{g.id}-t">The listening post: every report on {n_st} stations over {g.DAYS} days</title>'
             f'<desc id="{g.id}-d">{esc(desc)}</desc>'
             f'<text class="ax" x="{g.LX}" y="12">{day(g.W0).upper()}</text>'
@@ -297,7 +298,7 @@ def top(current=None, home=False):
     worst = min((st['status'] for _, st in stations() if st['status'] != 'silent'), key=RANK.get)
     cur = lambda k: ' aria-current="page"' if k == current else ''
     nav = ''.join(f'<li><a href="{R}{l["key"]}.html"{cur(l["key"])}><span class="code">{l["code"]}</span>{esc(l["name"])}</a></li>' for l in E['lines'])
-    nav += (f'<li><a href="{R}home.html#silence">Silence</a></li><li><a href="{R}home.html#reporting">Reporting</a></li>'
+    nav += (f'<li><a href="{R}silence.html"{cur("silence")}>Silence</a></li><li><a href="{R}reports.html"{cur("reports")}>Reporting</a></li>'
             f'<li><a href="{R}about.html"{cur("about")}>About</a></li>')
     hear = ('<button class="btn ghost" type="button" data-hear="jump" aria-pressed="false" data-on="Stop" data-off="Hear the network">'
             '<svg aria-hidden="true"><use href="#i-ear"/></svg><span class="lbl">Hear the network</span></button>') if home else \
@@ -312,7 +313,7 @@ def top(current=None, home=False):
     <a class="brand" href="{R}home.html" aria-label="Canary Palestine, home">{wordmark()}
       <span class="now g" aria-hidden="true">{call(worst)}<span>{n_st} stations</span></span></a>
     <nav class="nav" aria-label="Sections"><ul>{nav}</ul></nav>
-    <div class="acts">{hear}<a class="btn hot" href="{R}home.html#alerts"><svg aria-hidden="true"><use href="#i-bell"/></svg>Station alerts</a></div>
+    <div class="acts">{hear}<a class="btn hot" href="{R}alerts.html"{cur("alerts")}><svg aria-hidden="true"><use href="#i-bell"/></svg>Station alerts</a></div>
   </div></header>
 </div>
 """
@@ -327,8 +328,8 @@ def foot(scripts=('voice', 'cp')):
       <div><a href="{R}home.html" aria-label="Canary Palestine, home">{wordmark("wm")}</a>
         <p class="about">{esc(E["about"])}</p></div>
       <nav aria-labelledby="fn-1"><h2 id="fn-1" class="lab">Network</h2><ul>{lines}</ul></nav>
-      <nav aria-labelledby="fn-2"><h2 id="fn-2" class="lab">Desk</h2><ul><li><a href="{R}home.html#reporting">Reporting</a></li><li><a href="{R}about.html#method">How statuses are set</a></li><li><a href="{R}about.html#corrections">Corrections</a></li><li><a href="{R}about.html#send">Send a report</a></li></ul></nav>
-      <nav aria-labelledby="fn-3"><h2 id="fn-3" class="lab">Follow</h2><ul><li><a href="{R}home.html#alerts">Station alerts</a></li><li><a href="#" aria-disabled="true">Telegram · soon</a></li><li><a href="#" aria-disabled="true">RSS · soon</a></li><li><a href="{R}index.html">The identity</a></li></ul></nav>
+      <nav aria-labelledby="fn-2"><h2 id="fn-2" class="lab">Desk</h2><ul><li><a href="{R}reports.html">Reporting</a></li><li><a href="{R}silence.html">Silent stations</a></li><li><a href="{R}about.html#method">How statuses are set</a></li><li><a href="{R}about.html#corrections">Corrections</a></li><li><a href="{R}about.html#send">Send a report</a></li></ul></nav>
+      <nav aria-labelledby="fn-3"><h2 id="fn-3" class="lab">Follow</h2><ul><li><a href="{R}alerts.html">Station alerts</a></li><li><a href="{R}index.html">The identity</a></li><li><a href="{R}credits.html">Photo credits</a></li><li><a href="{R}privacy.html">Privacy</a></li></ul></nav>
     </div>
     <div class="fine g"><p>© 2026 Canary Palestine · prototype</p><p>Statuses are the desk's reading of named reports, not official alerts.</p></div>
   </div>
@@ -350,7 +351,7 @@ def page():
     reading = lead_st[L['codes'][0]]
 
     nav = ''.join(f'<li><a href="#rack-{l["key"]}"><span class="code">{l["code"]}</span>{esc(l["name"])}</a></li>' for l in E['lines'])
-    nav += '<li><a href="#silence">Silence</a></li><li><a href="#reporting">Reporting</a></li>'
+    nav += ''
 
     newest = ''.join(
         f'<li><a href="{rlink(n["id"])}">{photo(n.get("photo"), "thumb") if has(n.get("photo")) else '<span class="scan thumb none"></span>'}'
@@ -460,7 +461,7 @@ def page():
 
   <section class="inv paper" id="reporting" aria-labelledby="inv-h">
     <div class="wrap">
-      <div class="sec-h"><h2 id="inv-h">Reporting</h2><p>The stories behind the readings, each sourced to the report it rests on.</p></div>
+      <div class="sec-h"><h2 id="inv-h">Reporting</h2><p>The stories behind the readings, each sourced to the report it rests on. <a href="reports.html">All {len(E["reports"])} reports</a></p></div>
       <article class="feat" data-s="{F["s"]}" aria-labelledby="f-h">
         <figure>{photo(F["photo"], "r43", eager=False)}{caption(F["photo"])}</figure>
         <div>
