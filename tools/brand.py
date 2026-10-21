@@ -168,7 +168,9 @@ def main():
         pal.append(pen.getCommands())
     pal = ''.join(pal)
     W, H = x_end + pad, max(pal_y, base + 447 * s) + pad
-    marks = {'wordmark': {'w': round(W, 1), 'h': round(H, 1), 'head': word_head, 'letters': letters, 'pal': pal}}
+    # hc: the head's centre and outer radius in the wordmark's units, where the loader's head lands
+    marks = {'wordmark': {'w': round(W, 1), 'h': round(H, 1), 'head': word_head, 'letters': letters, 'pal': pal,
+                          'hc': [round(pad + R_OUT * s, 2), round(base - CY * s, 2), round(R_OUT * s, 2)]}}
 
     def wordmark(ink, headc, palc, bg=None):
         return svg(W, H, f'<path d="{word_head}" fill="{headc}" fill-rule="evenodd"/>'

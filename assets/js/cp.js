@@ -14,45 +14,105 @@
   const light = () => requestAnimationFrame(() => requestAnimationFrame(() => root.classList.add('lit')));
 
   /* ---------- 1 the first call ---------- */
+  // The stylus line draws, the head pops in with its beak shut, throws itself back and sings its trill.
+  // Then the call and the stylus fade, and the head flies into the masthead, landing exactly on the
+  // wordmark's own head while the coal behind it clears and the page rises in underneath.
+  const ease = (t) => 1 - Math.pow(1 - Math.min(1, Math.max(0, t)), 3);
+  const inOut = (t) => { t = Math.min(1, Math.max(0, t)); return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };
+  const back = (t) => { t = Math.min(1, Math.max(0, t)); const c = 1.9; return 1 + (c + 1) * Math.pow(t - 1, 3) + c * Math.pow(t - 1, 2); };
+
   function firstCall() {
     const el = $('.first');
     const force = /[?&]loader\b/.test(location.search);
-    if (!el) return light();
-    if (!force && (reduce || store.get('cp-heard') || document.visibilityState === 'hidden')) { el.remove(); return light(); }
+    if (!el) return arrive();
+    if (!force && (reduce || store.get('cp-heard') || document.visibilityState === 'hidden')) { el.remove(); return arrive(); }
     store.set('cp-heard', '1');
     root.classList.add('hearing');
-    const hp = $('.first .hd'), notes = $$('.first .note'), sty = $('.first .stylus'), cap = $('.first .cap');
-    const s = 0.1, cx = 80, cy = 66;
-    let done = false;
-    const finish = () => {
-      if (done) return; done = true;
-      el.classList.add('go');
-      light();
-      setTimeout(() => { el.remove(); root.classList.remove('hearing'); }, 800);
-    };
-    const t0 = performance.now();
-    const ease = (t) => 1 - Math.pow(1 - Math.min(1, Math.max(0, t)), 3);
-    const back = (t) => { t = Math.min(1, Math.max(0, t)); const c = 1.9; return 1 + (c + 1) * Math.pow(t - 1, 3) + c * Math.pow(t - 1, 2); };
+    const svg = $('svg', el), hp = $('.first .hd'), notes = $$('.first .note'), sty = $('.first .stylus'), cap = $('.first .cap');
+    const s = 0.1, cx = 80, cy = 66, R = 544;
+    const [s0, s1] = window.CANARY_SHUT, [b0, b1] = window.CANARY_BEAK;
     const lens = notes.map((n) => n.getTotalLength());
     notes.forEach((n, i) => { n.style.strokeDasharray = lens[i]; n.style.strokeDashoffset = lens[i]; });
     const sl = sty.getTotalLength(); sty.style.strokeDasharray = sl;
+    const SING = 1500, FLY = 720;
+    let done = false, flight = null, lit = false;
+
+    // where the head is now and where it lands, in screen pixels
+    function plan() {
+      const target = $('.brand .wm');
+      const hc = window.CANARY_MARKS.wordmark.hc;
+      if (!target || scrollY > 4) return null;
+      const m = svg.getScreenCTM(), n = target.getScreenCTM(), box = svg.getBoundingClientRect();
+      if (!m || !n) return null;
+      const from = { x: m.a * cx + m.e, y: m.d * cy + m.f, r: m.a * R * s };
+      const to = { x: n.a * hc[0] + n.e, y: n.d * hc[1] + n.f, r: n.a * hc[2] };
+      if (to.y < 0 || to.y > innerHeight) return null;
+      return { from, to, L: box.left, T: box.top };
+    }
+    const finish = () => {
+      if (done) return; done = true;
+      if (!lit) { lit = true; arrive(); }
+      el.remove(); root.classList.remove('hearing');
+    };
+    const t0 = performance.now();
     function frame(now) {
       if (done) return;
       const t = now - t0;
       sty.style.strokeDashoffset = sl * (1 - ease(t / 650));
-      const k = back((t - 180) / 520);                       // head pops in, beak shut
-      const open = ease((t - 700) / 260);                    // then throws its head back and opens
-      const [s0, s1] = window.CANARY_SHUT, [b0, b1] = window.CANARY_BEAK;
+      const k = back((t - 180) / 520);
+      const open = ease((t - 700) / 260);
       const lo = s0 + (b0 - s0) * open, hi = s1 + (b1 - s1) * open;
+      // the head tips back to sing, and comes level again in flight
+      const level = t > SING ? inOut((t - SING) / FLY) : 0;
       hp.setAttribute('d', head(cx, cy, s * Math.max(0.001, k), lo, hi));
-      hp.setAttribute('transform', `rotate(${-8 * open} ${cx} ${cy})`);
+      hp.setAttribute('transform', `rotate(${-8 * open * (1 - level)} ${cx} ${cy})`);
       notes.forEach((n, i) => { n.style.strokeDashoffset = lens[i] * (1 - ease((t - 880 - i * 110) / 160)); });
-      cap.style.opacity = ease((t - 900) / 300);
-      if (t > 1900) return finish();
+      const out = 1 - ease((t - SING) / 220);
+      notes.forEach((n) => { n.style.opacity = out; });
+      sty.style.opacity = out;
+      cap.style.opacity = Math.min(ease((t - 900) / 300), out);
+      if (t > SING) {
+        if (flight === null) flight = plan() || false;
+        const f = inOut((t - SING) / FLY);
+        if (flight) {
+          const { from, to, L, T } = flight;
+          const z = 1 + (to.r / from.r - 1) * f;
+          const x = from.x + (to.x - from.x) * f, y = from.y + (to.y - from.y) * f;
+          svg.style.transformOrigin = '0 0';
+          svg.style.transform = `translate(${x - L - z * (from.x - L)}px, ${y - T - z * (from.y - T)}px) scale(${z})`;
+        } else {
+          svg.style.opacity = 1 - f;
+        }
+        el.style.backgroundColor = `rgba(14,16,13,${1 - ease((t - SING - 120) / 480)})`;
+        if (!lit && t > SING + 160) { lit = true; arrive(); }
+        if (t > SING + FLY) return finish();
+      }
       requestAnimationFrame(frame);
     }
     requestAnimationFrame(frame);
     setTimeout(finish, 4500);                                  // guard: never hold the page
+  }
+
+  // The page arrives: headers rise line by line, and on a sonogram a canary playhead sweeps once
+  // left to right, writing each mark as it passes (the marks' CSS delays follow the same clock).
+  function arrive() {
+    light();
+    if (reduce) return;
+    $$('.sono svg[data-k]').forEach((svg) => {
+      if (!svg.getBoundingClientRect().width) return;
+      const ph = $('.head-play', svg), x0 = +svg.dataset.x0, x1 = +svg.dataset.x1, k = +svg.dataset.k;
+      if (!ph) return;
+      const start = performance.now() + 350, dur = (x1 - x0) * k;
+      svg.classList.add('sweeping');
+      const tick = (now) => {
+        const p = Math.min(1, Math.max(0, (now - start) / dur));
+        const x = x0 + (x1 - x0) * p;
+        ph.setAttribute('x1', x); ph.setAttribute('x2', x);
+        if (p < 1) return requestAnimationFrame(tick);
+        svg.classList.remove('sweeping');
+      };
+      requestAnimationFrame(tick);
+    });
   }
 
   /* ---------- 2 the sonogram ---------- */
@@ -87,9 +147,6 @@
   addEventListener('hashchange', () => flash(location.hash.slice(1)));
 
   /* ---------- 3 hearing the network ---------- */
-  // Each report is played as its call, left to right through the month: the steady song is a trill of
-  // rising notes, a watch is the trill breaking, an alert is the alarm's broadband chips, and a silent
-  // station plays nothing — which is the point. Lines are spread across the stereo field.
   // Each report is played as its call (assets/js/voice.js), left to right through the month; a silent
   // station plays nothing, which is the point. Lines are spread across the stereo field.
   const PAN = { water: -0.6, air: -0.2, power: 0.2, health: 0.6 };
@@ -140,6 +197,46 @@
     note.textContent = n ? `Prototype: nothing is sent yet. You chose ${n} station${n > 1 ? 's' : ''}; alerts will go out when the desk's mailing service is connected.`
                          : 'Choose at least one station to follow.';
   });
+
+  /* ---------- 6 the archive: search and filters, kept in the address so a search can be shared ---------- */
+  const results = $('[data-results]');
+  if (results) {
+    const q = $('#q'), rows = $$('.rrow', results), count = $('[data-count]'), said = $('[data-said]'), empty = $('.empty');
+    const chips = $$('.find [data-f]');
+    const params = new URLSearchParams(location.search);
+    q.value = params.get('q') || '';
+    chips.forEach((c) => { if ((params.get(c.dataset.f) || '').split(',').includes(c.dataset.v)) c.setAttribute('aria-pressed', 'true'); });
+    const picked = (f) => chips.filter((c) => c.dataset.f === f && c.getAttribute('aria-pressed') === 'true').map((c) => c.dataset.v);
+    function apply(push) {
+      const words = q.value.toLowerCase().split(/\s+/).filter(Boolean), lines = picked('line'), states = picked('s');
+      let n = 0;
+      rows.forEach((r) => {
+        const ok = words.every((w) => r.dataset.text.includes(w)) && (!lines.length || lines.includes(r.dataset.line)) && (!states.length || states.includes(r.dataset.s));
+        r.hidden = !ok; if (ok) n++;
+      });
+      count.textContent = n;
+      empty.hidden = n > 0;
+      said.textContent = words.length || lines.length || states.length ? `${n} of ${rows.length} match` : '';
+      if (push) {
+        const p = new URLSearchParams();
+        if (q.value.trim()) p.set('q', q.value.trim());
+        if (lines.length) p.set('line', lines.join(','));
+        if (states.length) p.set('s', states.join(','));
+        history.replaceState(null, '', p.toString() ? '?' + p : location.pathname);
+      }
+    }
+    q.addEventListener('input', () => apply(true));
+    $('.find').addEventListener('submit', (e) => { e.preventDefault(); apply(true); });
+    chips.forEach((c) => c.addEventListener('click', () => { c.setAttribute('aria-pressed', String(c.getAttribute('aria-pressed') !== 'true')); apply(true); }));
+    $('[data-clear]').addEventListener('click', () => { q.value = ''; chips.forEach((c) => c.setAttribute('aria-pressed', 'false')); apply(true); q.focus(); });
+    apply(false);
+  }
+
+  // alerts page: "All" ticks every station in a line, or clears them if they are all ticked
+  $$('[data-all]').forEach((b) => b.addEventListener('click', () => {
+    const boxes = $$('input[type=checkbox]', b.closest('fieldset')), on = boxes.every((x) => x.checked);
+    boxes.forEach((x) => { x.checked = !on; });
+  }));
 
   /* ---------- 5 share: copy the page's link ---------- */
   $$('[data-copy]').forEach((b) => b.addEventListener('click', async () => {

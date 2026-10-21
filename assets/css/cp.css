@@ -322,22 +322,41 @@ figcaption b{font-family:var(--gauge);font-stretch:87.5%;font-weight:700;color:v
 
 /* ---------- the first call (loader) ---------- */
 .first{position:fixed;inset:0;z-index:90;background:var(--coal);display:grid;place-items:center;color:var(--canary)}
-.first svg{width:min(560px,80vw);height:auto;overflow:visible}
+.first svg{width:min(560px,80vw);height:auto;overflow:visible;will-change:transform}
 .first .stylus{stroke:#3A4037;stroke-width:1.2}
 .first .note{fill:none;stroke:var(--canary);stroke-linecap:round}
 .first .cap{fill:var(--ash);font-family:var(--gauge);font-stretch:87.5%;font-size:11px;letter-spacing:.08em}
-.first.go{transition:transform .75s var(--ease-in),opacity .2s .6s;transform:translateY(-100%)}
 html.hearing body{overflow:hidden}
+html.hearing .brand .wm .h{visibility:hidden}   /* the loader's head lands here */
 html:not(.js) .first{display:none}
 
 /* entrance after the loader / on load */
 .js .rise{opacity:0;transform:translateY(14px)}
-.lit .rise{opacity:1;transform:none;transition:opacity .7s var(--ease),transform .9s var(--ease);transition-delay:calc(var(--i,0) * 70ms)}
+.lit .rise{opacity:1;transform:none;transition:opacity .6s var(--ease),transform .8s var(--ease);transition-delay:calc(var(--i,0) * 70ms)}
 .js .sono .rep{opacity:0}
-.lit .sono .rep{opacity:1;transition:opacity .3s;transition-delay:calc(var(--d,0) * 1ms)}
+.lit .sono .rep{opacity:1;transition:opacity .25s;transition-delay:calc(var(--d,0) * 1ms)}
 .lit .sono.playing .rep{transition-delay:0s}
+.sono svg.sweeping .head-play{opacity:1}
+/* a station's month is written left to right, and its call is drawn after the head */
+.js .sono.month svg{clip-path:inset(0 100% 0 0)}
+.lit .sono.month svg{clip-path:inset(0 0 0 0);transition:clip-path 1.1s var(--ease) .35s}
+.js .stp-mark .bigmark .cl,.js .callrows .bigmark .cl{stroke-dasharray:1;stroke-dashoffset:1}
+.lit .stp-mark .bigmark .cl,.lit .callrows .bigmark .cl{stroke-dashoffset:0;transition:stroke-dashoffset .9s var(--ease) .4s}
+/* the masthead's call sings now and then: two chips, or one note, every few seconds */
+.brand .now .call{animation:chirp 7s var(--ease) 2.5s infinite}
+@keyframes chirp{0%,84%,100%{opacity:1}87%{opacity:.2}90%{opacity:1}93%{opacity:.2}96%{opacity:1}}
+/* photos that are links answer the pointer */
+.rrow .scan img,.mr .scan img,.newest .scan img{transition:transform .7s var(--ease)}
+.rrow a:hover .scan img,.mr a:hover .scan img,.newest a:hover .scan img{transform:scale(1.04)}
+/* page to page: the wordmark stays put, the rest crossfades */
+@view-transition{navigation:auto}
+.brand .wm{view-transition-name:wordmark}
+::view-transition-old(root),::view-transition-new(root){animation-duration:.26s}
 
 @media (prefers-reduced-motion:reduce){
+  @view-transition{navigation:none}
+  .js .sono.month svg{clip-path:none}
+  .js .stp-mark .bigmark .cl,.js .callrows .bigmark .cl{stroke-dashoffset:0}
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;transition-delay:0s!important;scroll-behavior:auto!important}
   .js .rise,.js .sono .rep{opacity:1;transform:none}
 }
@@ -591,6 +610,97 @@ html:not(.js) .first{display:none}
 .nf .acts{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
 .nf .btn{color:var(--chalk);border-color:var(--seam)}
 .nf .btn.hot{color:var(--coal);background:var(--canary);border-color:var(--canary)}
+
+/* archive */
+.arc-head{padding:30px 0 36px}
+.arc-head h1{font-size:clamp(40px,4.6vw,68px);line-height:1;letter-spacing:-.035em;font-weight:780;color:#fff}
+.arc-head .dek{margin-top:14px;font-size:18px;color:#C8CCC2;max-width:44em;font-weight:340}
+.find{margin-top:26px;max-width:900px}
+.q-row{display:flex;align-items:center;gap:12px;border-bottom:2px solid var(--canary);padding-bottom:6px}
+.q-row svg{width:22px;height:22px;color:var(--canary);flex:none}
+.q-row input{flex:1;min-width:0;min-height:52px;background:none;border:0;color:#fff;font:inherit;font-size:21px;font-weight:420}
+.q-row input::placeholder{color:#7E847A}
+.q-row input:focus{outline:none}
+.q-row:focus-within{border-bottom-color:#fff}
+.chips{display:flex;flex-wrap:wrap;gap:10px 28px;margin-top:16px}
+.chips ul{display:flex;flex-wrap:wrap;gap:8px}
+.chips button{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 13px;border:1px solid var(--seam);border-radius:3px;background:none;color:var(--chalk);font-size:14px;font-weight:540;cursor:pointer;transition:border-color .2s,background .2s,color .2s}
+.chips button svg{width:16px;height:16px}
+.chips button .call{width:20px;height:12px}
+.chips button:hover{border-color:var(--ash)}
+.chips button[aria-pressed="true"]{background:var(--canary);border-color:var(--canary);color:var(--coal)}
+.chips button[aria-pressed="true"] .call{color:var(--coal)}
+.arc-list{padding:40px 0 72px}
+.arc-list .sec-h a{font-weight:600}
+.rrow[hidden]{display:none}
+.empty[hidden]{display:none}
+.empty{display:flex;align-items:center;gap:20px;padding:40px 0;max-width:640px}
+.empty .shut{width:64px;height:64px;fill:var(--graphite);flex:none}
+.empty button{background:none;border:0;padding:0;font:inherit;font-weight:620;text-decoration:underline;cursor:pointer;color:inherit}
+.inv .sec-h p a{font-weight:620;margin-left:4px}
+
+/* silence page */
+.sil-head{padding:30px 0 52px}
+.sil-head .crumb ol{color:rgba(14,16,13,.7)}
+.sil-head .crumb a{color:var(--coal)}
+.sil-head .crumb li+li::before{color:rgba(14,16,13,.4)}
+.sil-head .shut{width:96px;height:96px;fill:var(--coal);margin-bottom:18px}
+.sil-head h1{font-size:clamp(46px,6vw,96px);line-height:.95;letter-spacing:-.04em;font-weight:820;font-variation-settings:"SHRP" 100}
+.sil-head .count{margin-top:16px;font-size:13px;font-weight:700}
+.sil-body{padding-top:48px;padding-bottom:80px}
+.qs-list{display:grid;gap:0;border-top:2px solid var(--trace)}
+.qs{display:grid;grid-template-columns:200px minmax(0,1fr);column-gap:36px;padding:28px 0;border-bottom:1px solid var(--rule)}
+.qs > *{grid-column:2;min-width:0}
+.qs .qs-top{grid-column:1;grid-row:1 / span 5}
+.qs .code{font-size:12px;font-weight:700}
+.qs .days{font-family:var(--gauge);font-stretch:75%;font-weight:760;font-size:84px;line-height:.85;letter-spacing:-.04em;margin-top:8px}
+.qs .days small{font-size:18px;margin-left:6px;letter-spacing:0}
+.qs h2{font-size:26px;font-weight:700;letter-spacing:-.015em}
+.qs h2 a{text-decoration:none}
+.qs h2 a:hover{text-decoration:underline}
+.qs h2 span{display:block;font-size:16px;font-weight:420;color:var(--graphite);margin-top:4px}
+.qs > p{margin-top:10px;font-size:16px;max-width:60ch}
+.qs .sono.month{margin-top:16px;background:var(--coal);padding:8px 10px 4px}
+.qs .last{font-size:12px;color:var(--graphite)}
+.sil-how{margin-top:56px;max-width:860px}
+
+/* alerts page */
+.alp-body{padding:30px 0 72px}
+.alp h1{font-size:clamp(36px,4vw,60px);line-height:1;letter-spacing:-.03em;font-weight:760;color:#fff}
+.alp .say{margin-top:16px}
+.alp .how{margin-top:24px;display:grid;gap:10px;font-size:13px;color:var(--ash)}
+.alp .how li{display:flex;align-items:center;gap:10px}
+.alp .how .call{color:var(--chalk)} .alp .how .call.alert{color:var(--canary)}
+.alp fieldset+fieldset{margin-top:22px}
+.alp legend{display:flex;align-items:center;gap:8px;width:100%}
+.alp legend svg{width:16px;height:16px;color:var(--canary)}
+.alp legend .all{margin-left:auto;background:none;border:0;color:var(--ash);font:inherit;font-size:11px;letter-spacing:.07em;text-transform:uppercase;cursor:pointer;min-height:32px;padding:0 4px;text-decoration:underline}
+.alp legend .all:hover{color:var(--canary)}
+.radios{display:flex;flex-wrap:wrap;gap:10px 24px}
+.radios label{display:inline-flex;align-items:center;gap:8px;min-height:40px;font-size:15px;cursor:pointer}
+.radios input{accent-color:var(--canary);width:18px;height:18px}
+.alp .fine{margin-top:10px;font-size:12px;color:var(--ash)}
+.alp .fine a{color:var(--chalk)}
+
+/* credits */
+.credits{padding:40px 0 80px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 40px}
+.credits li{display:grid;grid-template-columns:180px minmax(0,1fr);gap:18px;align-items:start;padding-bottom:28px;border-bottom:1px solid var(--rule)}
+.credits figure{margin:0}
+.credits p{font-size:14.5px;line-height:1.45}
+.credits p+p{margin-top:6px}
+.credits .g{font-size:12px;color:var(--graphite)}
+
+@media (max-width:1060px){
+  .credits{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:760px){
+  .qs{grid-template-columns:minmax(0,1fr)}
+  .qs .qs-top{grid-column:1;grid-row:auto;display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px}
+  .qs > *{grid-column:1}
+  .qs .days{font-size:56px}
+  .q-row input{font-size:17px}
+  .credits li{grid-template-columns:112px minmax(0,1fr)}
+}
 
 @media (max-width:1060px){
   .rpt-grid,.stp-cols,.stp-grid,.lnp-grid{grid-template-columns:minmax(0,1fr);gap:36px}
