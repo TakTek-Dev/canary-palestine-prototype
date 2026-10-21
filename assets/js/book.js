@@ -54,13 +54,18 @@
     out.textContent = `SHRP ${SH[b.dataset.set][0]} · ${SH[b.dataset.set][1]}`;
   }));
 
-  // chapter bar: mark the chapter being read
+  // chapter bar: mark the chapter being read, and slide the bar sideways to keep it in view.
+  // Only the bar scrolls: scrollIntoView() would also move the page and fight the reader's scroll.
+  const bar = $('.bk-top nav');
   const links = new Map($$('.bk-top li a').map((a) => [a.getAttribute('href').slice(1), a]));
   const io = new IntersectionObserver((es) => es.forEach((e) => {
     if (!e.isIntersecting) return;
     links.forEach((a, k) => a.setAttribute('aria-current', String(k === e.target.id)));
     const a = links.get(e.target.id);
-    if (a) a.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    if (!a || !bar || bar.scrollWidth <= bar.clientWidth) return;
+    const r = a.getBoundingClientRect(), b = bar.getBoundingClientRect();
+    const left = bar.scrollLeft + (r.left - b.left) - (bar.clientWidth - r.width) / 2;
+    bar.scrollTo({ left: Math.max(0, left), behavior: reduce ? 'auto' : 'smooth' });
   }), { rootMargin: '-45% 0px -50% 0px' });
   links.forEach((_, k) => { const s = document.getElementById(k); if (s) io.observe(s); });
 })();
